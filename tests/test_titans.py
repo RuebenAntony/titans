@@ -26,17 +26,17 @@ def test_northstar_initialization():
 
 def test_scorch_move():
     scorch = Scorch(grid)
-    grid.set_obj_coordinates(scorch, 0, 0)
+    scorch.titan_fall(0, 0, 0)
     assert scorch.move(delta_x=1, delta_y=1) == (1, 1, 0), "Scorch should move to (1, 1, 0)."
 
 def test_ronin_move():
     ronin = Ronin(grid)
-    grid.set_obj_coordinates(ronin, 0, 0)
+    ronin.titan_fall(0, 0, 0)
     assert ronin.move(delta_x=2, delta_y=2) == (2, 2, 0), "Ronin should move to (2, 2, 0)."
 
 def test_northstar_move():
     northstar = Northstar(grid)
-    grid.set_obj_coordinates(northstar, 0, 0)
+    northstar.titan_fall(0, 0, 0)
     assert northstar.move(delta_x=3, delta_y=3) == (3, 3, 0), "Northstar should move to (3, 3, 0)."
 
 def test_scorch_collision():
@@ -45,10 +45,10 @@ def test_scorch_collision():
     ronin = Ronin(grid)
     
     # Place Scorch at (0, 0, 0)
-    grid.set_obj_coordinates(scorch, 0, 0, 0)
+    scorch.titan_fall(0, 0, 0)
     
     # Place Ronin at (1, 1, 0)
-    grid.set_obj_coordinates(ronin, 1, 1, 0)
+    ronin.titan_fall(1, 1, 0)
     
     # Attempt to move Scorch to Ronin's position
     new_position = scorch.move(delta_x=1, delta_y=1)

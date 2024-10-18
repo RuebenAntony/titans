@@ -80,7 +80,7 @@ class Grid:
         # Check if another object is already at the new coordinates
         existing_obj = self.inspect_coordinate(*new_coords)
         if existing_obj:
-            logger.warning(f"Another object ({existing_obj.__class__.__name__}) is already at {new_coords}")
+            logger.warning(f"Another ({existing_obj.__class__.__name__}) is already at {new_coords}")
             return
         logger.info(f"Setting value at {new_coords} to {obj.__class__.__name__ if obj else 'None'}")
 
@@ -112,19 +112,20 @@ class Grid:
 # Titans
 
 class Titan:
+
     def __init__(self, grid):
         self.grid = grid
 
+    def titan_fall(self, x, y, z=0):
+        self.grid.set_obj_coordinates(self, x, y, z)
+
     def move(self, delta_x=0, delta_y=0, delta_z=0):
-        """
-        Move the titan by a delta amount, constrained by move_range.
-        """
+
         current_coordinates = self.grid.get_obj_coordinates(self)
         if not current_coordinates:
             logger.error(f"{self.__class__.__name__} is not on the grid.")
             return
 
-        # Calculate the new coordinates
         new_coordinates = (
             current_coordinates[0] + delta_x,
             current_coordinates[1] + delta_y,
@@ -134,7 +135,6 @@ class Titan:
         # Check if the move is within the move_range
         if abs(delta_x) <= self.move_range and abs(delta_y) <= self.move_range and abs(delta_z) <= self.move_range:
 
-            # Check if the new coordinates are already occupied
             occupant = self.grid.inspect_coordinate(*new_coordinates)
             if occupant is not None:
                 logger.warning(f"Move to {new_coordinates} blocked by {occupant.__class__.__name__}")
@@ -154,11 +154,13 @@ class Scorch(Titan):
         self.health = 1000
         self.move_range = 5
 
+
 class Ronin(Titan):
     def __init__(self, grid):
         super().__init__(grid)
         self.health = 1000
         self.move_range = 10
+
 
 class Northstar(Titan):
     def __init__(self, grid):
@@ -166,19 +168,20 @@ class Northstar(Titan):
         self.health = 1000
         self.move_range = 7
 
+
 def run():
 
     grid = Grid()
     scorch = Scorch(grid)
-    grid.set_obj_coordinates(scorch, 10, 10, 0)
+    scorch.titan_fall(10, 10, 0)
     logger.info(f"{scorch.__class__.__name__} is on the grid: {scorch.grid.get_obj_coordinates(scorch)}")
 
     ronin = Ronin(grid)
-    grid.set_obj_coordinates(ronin, 10, 11, 0)
+    ronin.titan_fall(10, 11, 0)
     logger.info(f"{ronin.__class__.__name__} is on the grid: {ronin.grid.get_obj_coordinates(ronin)}")
 
     northstar = Northstar(grid)
-    grid.set_obj_coordinates(northstar, 10, 9, 0)
+    northstar.titan_fall(10, 9, 0)
     logger.info(f"{northstar.__class__.__name__} is on the grid: {northstar.grid.get_obj_coordinates(northstar)}")
 
 
