@@ -77,6 +77,11 @@ class Grid:
             logger.debug(f"{obj.__class__.__name__ if obj else 'Object'} is already at {new_coords}")
             return
 
+        # Check if another object is already at the new coordinates
+        existing_obj = self.inspect_coordinate(*new_coords)
+        if existing_obj:
+            logger.warning(f"Another object ({existing_obj.__class__.__name__}) is already at {new_coords}")
+            return
         logger.info(f"Setting value at {new_coords} to {obj.__class__.__name__ if obj else 'None'}")
 
         # Remove the object from its previous location if it exists
@@ -128,6 +133,18 @@ class Scorch(Titan):
         self.health = 1000
 
 
+class Ronin(Titan):
+    def __init__(self, grid):
+        super().__init__(grid)
+        self.health = 1000
+
+
+class Northstar(Titan):
+    def __init__(self, grid):
+        super().__init__(grid)
+        self.health = 1000
+            
+
 def run():
 
     grid = Grid()
@@ -135,9 +152,20 @@ def run():
     grid.set_obj_coordinates(scorch, 10, 10, 0)
     logger.info(f"{scorch.__class__.__name__} is on the grid: {scorch.grid.get_obj_coordinates(scorch)}")
 
+    ronin = Ronin(grid)
+    grid.set_obj_coordinates(ronin, 10, 11, 0)
+    logger.info(f"{ronin.__class__.__name__} is on the grid: {ronin.grid.get_obj_coordinates(ronin)}")
+
+    northstar = Northstar(grid)
+    grid.set_obj_coordinates(northstar, 10, 9, 0)
+    logger.info(f"{northstar.__class__.__name__} is on the grid: {northstar.grid.get_obj_coordinates(northstar)}")
+
+
     while True:
         scorch.move()
+        ronin.move()
+        northstar.move()
         time.sleep(1)
-
+ 
 if __name__ == "__main__":
     run()
