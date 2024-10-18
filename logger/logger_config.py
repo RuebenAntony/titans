@@ -23,7 +23,7 @@ class ColoredFormatter(logging.Formatter):
 def get_pipe_handler():
     try:
         # Open the named pipe for writing, with line buffering
-        pipe = open("titans_pipe", "w", buffering=1)  
+        pipe = open("titans.log", "w", buffering=1)  
         return logging.StreamHandler(pipe)
     except Exception as e:
         print(f"Failed to open pipe: {e}")
