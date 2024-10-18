@@ -68,7 +68,7 @@ class Grid:
     def __init__(self):
         self.grid = {}
 
-    def set_obj_coordinates(self, obj, x, y, z):
+    def set_obj_coordinates(self, obj, x, y, z=0):
         new_coords = (x, y, z)
         old_coords = self.get_obj_coordinates(obj)
 
@@ -115,35 +115,56 @@ class Titan:
     def __init__(self, grid):
         self.grid = grid
 
-    def move(self, x=1, y=1, z=0):
-        "get location and move to new location by a random amount"
+    def move(self, delta_x=0, delta_y=0, delta_z=0):
+        """
+        Move the titan by a delta amount, constrained by move_range.
+        """
+        current_coordinates = self.grid.get_obj_coordinates(self)
+        if not current_coordinates:
+            logger.error(f"{self.__class__.__name__} is not on the grid.")
+            return
 
-        coordinates = self.grid.get_obj_coordinates(self)
+        # Calculate the new coordinates
+        new_coordinates = (
+            current_coordinates[0] + delta_x,
+            current_coordinates[1] + delta_y,
+            current_coordinates[2] + delta_z
+        )
 
-        if coordinates:
-            x, y, z = coordinates
-            x += random.randint(-2, 2)
-            y += random.randint(-2, 2)
-            self.grid.set_obj_coordinates(self, x, y, z)
-            logger.info(f"{self.__class__.__name__} moved to {x}, {y}, {z}")
+        # Check if the move is within the move_range
+        if abs(delta_x) <= self.move_range and abs(delta_y) <= self.move_range and abs(delta_z) <= self.move_range:
 
+            # Check if the new coordinates are already occupied
+            occupant = self.grid.inspect_coordinate(*new_coordinates)
+            if occupant is not None:
+                logger.warning(f"Move to {new_coordinates} blocked by {occupant.__class__.__name__}")
+                return current_coordinates
+            
+            self.grid.set_obj_coordinates(self, *new_coordinates)
+            logger.info(f"{self.__class__.__name__} moved to {new_coordinates}")
+            return new_coordinates
+        else:
+            logger.warning(f"Move by {delta_x, delta_y, delta_z} is out of range for {self.__class__.__name__}")
+            return current_coordinates
+        
+        
 class Scorch(Titan):
     def __init__(self, grid):
         super().__init__(grid)
         self.health = 1000
-
+        self.move_range = 5
 
 class Ronin(Titan):
     def __init__(self, grid):
         super().__init__(grid)
         self.health = 1000
-
+        self.move_range = 10
 
 class Northstar(Titan):
     def __init__(self, grid):
         super().__init__(grid)
         self.health = 1000
-            
+        self.move_range = 7
 
 def run():
 
@@ -162,9 +183,18 @@ def run():
 
 
     while True:
-        scorch.move()
-        ronin.move()
-        northstar.move()
+        scorch.move(
+            delta_x=random.randint(-scorch.move_range, scorch.move_range), 
+            delta_y=random.randint(-scorch.move_range, scorch.move_range)
+        )
+        ronin.move(
+            delta_x=random.randint(-ronin.move_range, ronin.move_range), 
+            delta_y=random.randint(-ronin.move_range, ronin.move_range)
+        )
+        northstar.move(
+            delta_x=random.randint(-northstar.move_range, northstar.move_range), 
+            delta_y=random.randint(-northstar.move_range, northstar.move_range)
+        )
         time.sleep(1)
  
 if __name__ == "__main__":
