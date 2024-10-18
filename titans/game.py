@@ -54,41 +54,87 @@ Tasks:
 
 
 import time
+import random
 
 from logger.logger_config import get_logger
 
 logger = get_logger(__name__)
 
+# Grid
+
+class Grid:
+    "Grid is a 3D infinite voxel space"
+
+    def __init__(self):
+        self.grid = {}
+
+    def set_value(self, x, y, z, obj):
+        new_coords = (x, y, z)
+        old_coords = self.get_obj_coordinates(obj)
+
+        # If the object is already at the specified coordinates, do nothing
+        if old_coords == new_coords:
+            logger.debug(f"{obj.__class__.__name__ if obj else 'Object'} is already at {new_coords}")
+            return
+
+        logger.info(f"Setting value at {new_coords} to {obj.__class__.__name__ if obj else 'None'}")
+
+        # Remove the object from its previous location if it exists
+        if old_coords:
+            self.grid.pop(old_coords)
+            logger.info(f"Removed {obj.__class__.__name__} from old location {old_coords}")
+
+        if obj is None:
+            self.grid.pop(new_coords, None)
+            logger.info(f"Grid location {new_coords} is now empty")
+        else:
+            self.grid[new_coords] = obj
+            logger.info(f"Grid location {new_coords} is now {obj.__class__.__name__}")
+
+    def get_value(self, x, y, z):
+        return self.grid.get((x, y, z), None)
+    
+    def get_obj_coordinates(self, obj):
+        logger.info(f"Getting location of {obj.__class__.__name__}")
+        for key, value in self.grid.items():
+            if value == obj:
+                logger.debug(f"Found {obj.__class__.__name__} at {key}")
+                return key
+        return None
 
 # Titans
 
 class Titan:
-    def __init__(self):
+    def __init__(self, grid):
+        self.grid = grid
+
+    def move(self, x=1, y=1, z=0):
+        "get location and move to new location by a random amount"
+
+        coordinates = self.grid.get_obj_coordinates(self)
+
+        if coordinates:
+            x, y, z = coordinates
+            x += random.randint(-2, 2)
+            y += random.randint(-2, 2)
+            self.grid.set_value(x, y, z, self)
+            logger.info(f"{self.__class__.__name__} moved to {x}, {y}, {z}")
+
+class Scorch(Titan):
+    def __init__(self, grid):
+        super().__init__(grid)
         self.health = 1000
 
 
-class Scorch(Titan):
-    def __init__(self):
-        super().__init__()
-        self.type = "Scorch"
-
 def run():
+
+    grid = Grid()
+    scorch = Scorch(grid)
+    grid.set_value(10, 10, 0, scorch)
+    logger.info(f"{scorch.__class__.__name__} is on the grid: {scorch.grid.get_obj_coordinates(scorch)}")
+
     while True:
-        scorch = Scorch()
-        logger.info(scorch.health)
-
-        time.sleep(1)
-        logger.warning(scorch.type)
-
-        time.sleep(1)
-        logger.error("This is an error MESSAGE")
-
-        time.sleep(1)
-        logger.critical("This is a critical message")
-
-        time.sleep(1)
-        logger.debug("This is a debug message")
-
+        scorch.move()
         time.sleep(1)
 
 if __name__ == "__main__":
