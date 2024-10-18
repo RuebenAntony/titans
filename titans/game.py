@@ -68,7 +68,7 @@ class Grid:
     def __init__(self):
         self.grid = {}
 
-    def set_value(self, x, y, z, obj):
+    def set_obj_coordinates(self, obj, x, y, z):
         new_coords = (x, y, z)
         old_coords = self.get_obj_coordinates(obj)
 
@@ -91,9 +91,6 @@ class Grid:
             self.grid[new_coords] = obj
             logger.info(f"Grid location {new_coords} is now {obj.__class__.__name__}")
 
-    def get_value(self, x, y, z):
-        return self.grid.get((x, y, z), None)
-    
     def get_obj_coordinates(self, obj):
         logger.info(f"Getting location of {obj.__class__.__name__}")
         for key, value in self.grid.items():
@@ -101,6 +98,11 @@ class Grid:
                 logger.debug(f"Found {obj.__class__.__name__} at {key}")
                 return key
         return None
+    
+    def inspect_coordinate(self, x, y, z):
+        logger.info(f"Inspecting grid location {x}, {y}, {z}")
+        return self.grid.get((x, y, z), None)
+    
 
 # Titans
 
@@ -117,7 +119,7 @@ class Titan:
             x, y, z = coordinates
             x += random.randint(-2, 2)
             y += random.randint(-2, 2)
-            self.grid.set_value(x, y, z, self)
+            self.grid.set_obj_coordinates(self, x, y, z)
             logger.info(f"{self.__class__.__name__} moved to {x}, {y}, {z}")
 
 class Scorch(Titan):
@@ -130,7 +132,7 @@ def run():
 
     grid = Grid()
     scorch = Scorch(grid)
-    grid.set_value(10, 10, 0, scorch)
+    grid.set_obj_coordinates(scorch, 10, 10, 0)
     logger.info(f"{scorch.__class__.__name__} is on the grid: {scorch.grid.get_obj_coordinates(scorch)}")
 
     while True:
