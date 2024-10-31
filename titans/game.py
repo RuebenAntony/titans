@@ -195,6 +195,7 @@ class Scorch(Titan):
         self.move_range = 5
         self.scan_range = 15
 
+
 class Ronin(Titan):
     def __init__(self, grid):
         super().__init__(grid)
@@ -245,19 +246,21 @@ def run():
     blue_team.add_titan(northstar_blue)
 
     while True:
-        scorch.move(
-            delta_x=random.randint(-scorch.move_range, scorch.move_range), 
-            delta_y=random.randint(-scorch.move_range, scorch.move_range)
+        scorch_red.move(
+            delta_x=random.randint(-scorch_red.move_range, scorch_red.move_range), 
+            delta_y=random.randint(-scorch_red.move_range, scorch_red.move_range)
         )
-        ronin.move(
-            delta_x=random.randint(-ronin.move_range, ronin.move_range), 
-            delta_y=random.randint(-ronin.move_range, ronin.move_range)
+        ronin_red.move(
+            delta_x=random.randint(-ronin_red.move_range, ronin_red.move_range), 
+            delta_y=random.randint(-ronin_red.move_range, ronin_red.move_range)
         )
-        northstar.move(
-            delta_x=random.randint(-northstar.move_range, northstar.move_range), 
-            delta_y=random.randint(-northstar.move_range, northstar.move_range)
+        northstar_red.move(
+            delta_x=random.randint(-northstar_red.move_range, northstar_red.move_range), 
+            delta_y=random.randint(-northstar_red.move_range, northstar_red.move_range)
         )
+        print(scorch_red.grid.get_obj_coordinates(scorch_red))
         time.sleep(1)
  
+
 if __name__ == "__main__":
     run()

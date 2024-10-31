@@ -95,6 +95,17 @@ pytest = ">=2.6.4"
 watchdog = ">=0.6.0"
 
 [[package]]
+name = "reloady"
+version = "0.1.7"
+description = "A tool for automatically reloading Python programs on file changes"
+optional = false
+python-versions = "<4.0,>=3.7"
+files = [
+    {file = "reloady-0.1.7-py3-none-any.whl", hash = "sha256:13bcda40348c501fe2a1fc734a734544cad7d551912404140aaa1af89ccdbe3b"},
+    {file = "reloady-0.1.7.tar.gz", hash = "sha256:a0464320321e1874f3895c4293144688993920f5275f871d309d4a0dd37f8c47"},
+]
+
+[[package]]
 name = "watchdog"
 version = "5.0.3"
 description = "Filesystem events monitoring"
@@ -138,5 +149,5 @@ watchmedo = ["PyYAML (>=3.10)"]
 
 [metadata]
 lock-version = "2.0"
-python-versions = "^3.13"
-content-hash = "a297dff0afe9fab755ddebd8941b2a465ec0178b137c0e7c4914b2b0b54f14f6"
+python-versions = "^3.12"
+content-hash = "ce0e91f0f8a840d514aecc5f0228d0039942688ef463f41ce13df077493a2e20"

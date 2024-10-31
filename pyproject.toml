@@ -6,9 +6,10 @@ authors = ["RuebenAntony <rueben@antony.tv>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.13"
+python = "^3.12"
 pytest = "^8.3.3"
 pytest-watch = "^4.2.0"
+reloady = "^0.1.7"
 
 
 [tool.poetry.group.dev.dependencies]
