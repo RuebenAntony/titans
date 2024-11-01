@@ -46,14 +46,15 @@ async def run_game():
             delta_x=random.randint(-ronin_red.move_range, ronin_red.move_range), 
             delta_y=random.randint(-ronin_red.move_range, ronin_red.move_range)
         )
-    
+
         northstar_red.move(
             delta_x=random.randint(-northstar_red.move_range, northstar_red.move_range), 
             delta_y=random.randint(-northstar_red.move_range, northstar_red.move_range)
         )
         
         # Yield the current state as SSE data
-        yield f"data: {scorch_red.grid.get_obj_coordinates(scorch_red)}\n\n"
+        data = f"data: Scorch {scorch_red.grid.get_obj_coordinates(scorch_red)} Ronin {ronin_red.grid.get_obj_coordinates(ronin_red)} Northstar {northstar_red.grid.get_obj_coordinates(northstar_red)}\n\n"
+        yield data
         
         # Asynchronously sleep to avoid blocking
         await asyncio.sleep(1)
