@@ -258,7 +258,6 @@ def run():
             delta_x=random.randint(-northstar_red.move_range, northstar_red.move_range), 
             delta_y=random.randint(-northstar_red.move_range, northstar_red.move_range)
         )
-        print(scorch_red.grid.get_obj_coordinates(scorch_red))
         time.sleep(1)
  
 
