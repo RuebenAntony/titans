@@ -5,7 +5,13 @@
 To run the game with hot reloading:
 
 ```
-ptw --runner 'python -m titans.game'
+./manage.py livereload
+```
+
+Then in a new terminal:
+
+```
+./manage.py runserver
 ```
 
 To run the tests:
